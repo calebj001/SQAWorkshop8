@@ -6,12 +6,16 @@ import mnist
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Flatten
 from tensorflow.keras.utils import to_categorical
+import myLogger
 
 def readData():
     iris = datasets.load_iris()
+    simpleLogger.info('Input dataset: %s', str(iris)) # Added to check for poisoned dataset
     print(type(iris.data), type(iris.target))
     X = iris.data
     Y = iris.target
+    simpleLogger.info('Input data: %s', str(X)) # Added to check for poisoned data for poisoned dataset detection
+    simpleLogger.info('Target data: %s', str(Y)) #Added to compare data to target data for poisoned dataset detection
     df = pd.DataFrame(X, columns=iris.feature_names)
     print(df.head())
 
@@ -19,13 +23,16 @@ def readData():
 
 def makePrediction():
     iris = datasets.load_iris()
+    simpleLogger.info('Input dataset: %s', str(iris)) # Added to check for poisoned dataset
     knn = KNeighborsClassifier(n_neighbors=6)
     knn.fit(iris['data'], iris['target'])
     X = [
         [5.9, 1.0, 5.1, 1.8],
         [3.4, 2.0, 1.1, 4.8],
     ]
+    simpleLogger.info('Expected Prediction: %s', str(X)) #Added to check for model tricking (Initial prediction)
     prediction = knn.predict(X)
+    simpleLogger.info('Actual Prediction: %s', str(prediction)) #Added to check for model tricking (Output prediction)
     print(prediction)    
 
 def doRegression():
@@ -90,7 +97,13 @@ def doDeepLearning():
 
 
 if __name__=='__main__': 
+
+    simpleLogger  = myLogger.createLoggerObj() # Added to initialize logging at beginning of execution
+    simpleLogger.info("Initiating") 
+
     data_frame = readData()
     makePrediction() 
     doRegression() 
     doDeepLearning() 
+
+    simpleLogger.info('Finished processing') # Added to establish an ending to each run's logging
