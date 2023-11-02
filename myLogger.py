@@ -1,4 +1,6 @@
 import logging
+from datetime import date
+
 
 '''
 def giveMeLoggingObject():
@@ -10,7 +12,8 @@ def giveMeLoggingObject():
 '''
 
 def createLoggerObj(): 
-    fileName  = '2023-10-11.log' 
+    today = date.today()
+    fileName  = today.strftime('%Y-%m-%d') + '.log' 
     formatStr = '%(asctime)s %(message)s'
     logging.basicConfig(format=formatStr, filename=fileName, level=logging.INFO)
     myLogObj = logging.getLogger('sqa2023-logger') 
